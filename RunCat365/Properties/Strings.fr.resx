@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Menu_Runner" xml:space="preserve">
-    <value>Coureur</value>
-  </data>
   <data name="Menu_Theme" xml:space="preserve">
     <value>Thème</value>
   </data>
@@ -132,9 +129,6 @@
   <data name="Menu_Settings" xml:space="preserve">
     <value>Paramètres</value>
   </data>
-  <data name="Menu_EndlessGame" xml:space="preserve">
-    <value>Jeu sans fin</value>
-  </data>
   <data name="Menu_Information" xml:space="preserve">
     <value>Informations</value>
   </data>
@@ -143,9 +137,6 @@
   </data>
   <data name="Menu_Exit" xml:space="preserve">
     <value>Quitter</value>
-  </data>
-  <data name="Theme_System" xml:space="preserve">
-    <value>Système</value>
   </data>
   <data name="Theme_Light" xml:space="preserve">
     <value>Clair</value>
@@ -168,26 +159,11 @@
   <data name="Runner_Cat" xml:space="preserve">
     <value>Chat</value>
   </data>
-  <data name="Runner_Parrot" xml:space="preserve">
-    <value>Perroquet</value>
-  </data>
-  <data name="Runner_Horse" xml:space="preserve">
-    <value>Cheval</value>
-  </data>
   <data name="Message_AppLaunched" xml:space="preserve">
     <value>L'application a démarré. Si l'icône n'apparaît pas dans la barre des tâches, elle a peut-être été masquée ; veuillez la déplacer manuellement et l'épingler.</value>
   </data>
   <data name="Message_Warning" xml:space="preserve">
     <value>Avertissement</value>
-  </data>
-  <data name="Window_EndlessGame" xml:space="preserve">
-    <value>Jeu sans fin</value>
-  </data>
-  <data name="Game_PressSpaceToPlay" xml:space="preserve">
-    <value>Appuyez sur espace pour jouer.</value>
-  </data>
-  <data name="Game_GameOver" xml:space="preserve">
-    <value>GAME OVER</value>
   </data>
   <data name="SystemInfo_CPU" xml:space="preserve">
     <value>CPU</value>
@@ -240,12 +216,6 @@
   <data name="Message_CPUUsageUnavailable" xml:space="preserve">
     <value>Impossible d'obtenir l'utilisation du CPU. Impossible de mettre à jour la vitesse du coureur.</value>
   </data>
-  <data name="Menu_SpeedSource" xml:space="preserve">
-    <value>Vitesse basée sur</value>
-  </data>
-  <data name="Game_NewRecord" xml:space="preserve">
-    <value>Nouveau record</value>
-  </data>
   <data name="SystemInfo_Temperature" xml:space="preserve">
     <value>Température</value>
   </data>
@@ -254,50 +224,5 @@
   </data>
   <data name="SystemInfo_TemperatureFahrenheitFormat" xml:space="preserve">
     <value>{0:f1}°F</value>
-  </data>
-  <data name="Menu_CustomRunners" xml:space="preserve">
-    <value>Runners personnalisés...</value>
-  </data>
-  <data name="Window_CustomRunners" xml:space="preserve">
-    <value>Runners personnalisés</value>
-  </data>
-  <data name="CustomRunner_AddedRunners" xml:space="preserve">
-    <value>Runners personnalisés :</value>
-  </data>
-  <data name="CustomRunner_Name" xml:space="preserve">
-    <value>Nom du runner :</value>
-  </data>
-  <data name="CustomRunner_AddFrames" xml:space="preserve">
-    <value>Ajouter des images...</value>
-  </data>
-  <data name="CustomRunner_RemoveFrame" xml:space="preserve">
-    <value>Supprimer l'image</value>
-  </data>
-  <data name="CustomRunner_Save" xml:space="preserve">
-    <value>Enregistrer</value>
-  </data>
-  <data name="CustomRunner_Delete" xml:space="preserve">
-    <value>Supprimer</value>
-  </data>
-  <data name="CustomRunner_Requirements" xml:space="preserve">
-    <value>Format : PNG | Dimensions max : 32x32px</value>
-  </data>
-  <data name="CustomRunner_ConfirmOverwrite" xml:space="preserve">
-    <value>Un runner avec ce nom existe déjà. Écraser ?</value>
-  </data>
-  <data name="CustomRunner_ConfirmDelete" xml:space="preserve">
-    <value>Supprimer le runner « {0} » ?</value>
-  </data>
-  <data name="CustomRunner_RequirementsLabel" xml:space="preserve">
-    <value>Exigences :</value>
-  </data>
-  <data name="CustomRunner_FramesLabel" xml:space="preserve">
-    <value>Images :</value>
-  </data>
-  <data name="CustomRunner_Preview" xml:space="preserve">
-    <value>Aperçu :</value>
-  </data>
-  <data name="CustomRunner_PreviewSpeed" xml:space="preserve">
-    <value>Vitesse d'aperçu :</value>
   </data>
 </root>

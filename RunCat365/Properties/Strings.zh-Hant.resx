@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+  <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Menu_Runner" xml:space="preserve">
-    <value>跑步者</value>
-  </data>
   <data name="Menu_Theme" xml:space="preserve">
     <value>主題</value>
   </data>
@@ -132,9 +129,6 @@
   <data name="Menu_Settings" xml:space="preserve">
     <value>設定</value>
   </data>
-  <data name="Menu_EndlessGame" xml:space="preserve">
-    <value>無盡遊戲</value>
-  </data>
   <data name="Menu_Information" xml:space="preserve">
     <value>資訊</value>
   </data>
@@ -143,9 +137,6 @@
   </data>
   <data name="Menu_Exit" xml:space="preserve">
     <value>結束</value>
-  </data>
-  <data name="Theme_System" xml:space="preserve">
-    <value>系統</value>
   </data>
   <data name="Theme_Light" xml:space="preserve">
     <value>淺色</value>
@@ -168,26 +159,11 @@
   <data name="Runner_Cat" xml:space="preserve">
     <value>貓咪</value>
   </data>
-  <data name="Runner_Parrot" xml:space="preserve">
-    <value>鸚鵡</value>
-  </data>
-  <data name="Runner_Horse" xml:space="preserve">
-    <value>馬</value>
-  </data>
   <data name="Message_AppLaunched" xml:space="preserve">
     <value>應用程式已啟動。如果圖示不在工作列上，表示已被省略，請手動移動並固定它。</value>
   </data>
   <data name="Message_Warning" xml:space="preserve">
     <value>警告</value>
-  </data>
-  <data name="Window_EndlessGame" xml:space="preserve">
-    <value>無盡遊戲</value>
-  </data>
-  <data name="Game_PressSpaceToPlay" xml:space="preserve">
-    <value>按空白鍵開始。</value>
-  </data>
-  <data name="Game_GameOver" xml:space="preserve">
-    <value>遊戲結束</value>
   </data>
   <data name="SystemInfo_CPU" xml:space="preserve">
     <value>CPU</value>
@@ -240,12 +216,6 @@
   <data name="Message_CPUUsageUnavailable" xml:space="preserve">
     <value>取得 CPU 使用率失敗。無法更新執行速度。</value>
   </data>
-  <data name="Menu_SpeedSource" xml:space="preserve">
-    <value>速度來源</value>
-  </data>
-  <data name="Game_NewRecord" xml:space="preserve">
-    <value>新紀錄</value>
-  </data>
   <data name="SystemInfo_Temperature" xml:space="preserve">
     <value>溫度</value>
   </data>
@@ -254,50 +224,5 @@
   </data>
   <data name="SystemInfo_TemperatureFahrenheitFormat" xml:space="preserve">
     <value>{0:f1}°F</value>
-  </data>
-  <data name="Menu_CustomRunners" xml:space="preserve">
-    <value>自訂跑步者...</value>
-  </data>
-  <data name="Window_CustomRunners" xml:space="preserve">
-    <value>自訂跑步者</value>
-  </data>
-  <data name="CustomRunner_AddedRunners" xml:space="preserve">
-    <value>自訂跑步者:</value>
-  </data>
-  <data name="CustomRunner_Name" xml:space="preserve">
-    <value>跑步者名稱:</value>
-  </data>
-  <data name="CustomRunner_AddFrames" xml:space="preserve">
-    <value>新增影格...</value>
-  </data>
-  <data name="CustomRunner_RemoveFrame" xml:space="preserve">
-    <value>刪除影格</value>
-  </data>
-  <data name="CustomRunner_Save" xml:space="preserve">
-    <value>儲存</value>
-  </data>
-  <data name="CustomRunner_Delete" xml:space="preserve">
-    <value>刪除</value>
-  </data>
-  <data name="CustomRunner_Requirements" xml:space="preserve">
-    <value>格式: PNG | 最大尺寸: 32x32px</value>
-  </data>
-  <data name="CustomRunner_ConfirmOverwrite" xml:space="preserve">
-    <value>同名跑步者已存在。是否覆蓋？</value>
-  </data>
-  <data name="CustomRunner_ConfirmDelete" xml:space="preserve">
-    <value>刪除跑步者「{0}」？</value>
-  </data>
-  <data name="CustomRunner_RequirementsLabel" xml:space="preserve">
-    <value>需求:</value>
-  </data>
-  <data name="CustomRunner_FramesLabel" xml:space="preserve">
-    <value>影格:</value>
-  </data>
-  <data name="CustomRunner_Preview" xml:space="preserve">
-    <value>預覽:</value>
-  </data>
-  <data name="CustomRunner_PreviewSpeed" xml:space="preserve">
-    <value>預覽速度:</value>
   </data>
 </root>

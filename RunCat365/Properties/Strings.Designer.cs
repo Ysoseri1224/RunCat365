@@ -11,7 +11,6 @@
 namespace RunCat365.Properties {
     using System;
 
-
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -57,24 +56,6 @@ namespace RunCat365.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to GAME OVER.
-        /// </summary>
-        internal static string Game_GameOver {
-            get {
-                return ResourceManager.GetString("Game_GameOver", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Press space to play..
-        /// </summary>
-        internal static string Game_PressSpaceToPlay {
-            get {
-                return ResourceManager.GetString("Game_PressSpaceToPlay", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to New Record.
         /// </summary>
         internal static string Game_NewRecord
@@ -82,14 +63,6 @@ namespace RunCat365.Properties {
             get
             {
                 return ResourceManager.GetString("Game_NewRecord", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Endless Game.
-        /// </summary>
-        internal static string Menu_EndlessGame {
-            get {
-                return ResourceManager.GetString("Menu_EndlessGame", resourceCulture);
             }
         }
 
@@ -139,26 +112,11 @@ namespace RunCat365.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Runner.
-        /// </summary>
-        internal static string Menu_Runner {
-            get {
-                return ResourceManager.GetString("Menu_Runner", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         internal static string Menu_Settings {
             get {
                 return ResourceManager.GetString("Menu_Settings", resourceCulture);
-            }
-        }
-
-        internal static string Menu_SpeedSource {
-            get {
-                return ResourceManager.GetString("Menu_SpeedSource", resourceCulture);
             }
         }
 
@@ -208,24 +166,6 @@ namespace RunCat365.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Horse.
-        /// </summary>
-        internal static string Runner_Horse {
-            get {
-                return ResourceManager.GetString("Runner_Horse", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Parrot.
-        /// </summary>
-        internal static string Runner_Parrot {
-            get {
-                return ResourceManager.GetString("Runner_Parrot", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Dark.
         /// </summary>
         internal static string Theme_Dark {
@@ -240,24 +180,6 @@ namespace RunCat365.Properties {
         internal static string Theme_Light {
             get {
                 return ResourceManager.GetString("Theme_Light", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to System.
-        /// </summary>
-        internal static string Theme_System {
-            get {
-                return ResourceManager.GetString("Theme_System", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Endless Game.
-        /// </summary>
-        internal static string Window_EndlessGame {
-            get {
-                return ResourceManager.GetString("Window_EndlessGame", resourceCulture);
             }
         }
 
@@ -411,96 +333,6 @@ namespace RunCat365.Properties {
         internal static string SystemInfo_TemperatureFahrenheitFormat {
             get {
                 return ResourceManager.GetString("SystemInfo_TemperatureFahrenheitFormat", resourceCulture);
-            }
-        }
-
-        internal static string Menu_CustomRunners {
-            get {
-                return ResourceManager.GetString("Menu_CustomRunners", resourceCulture);
-            }
-        }
-
-        internal static string Window_CustomRunners {
-            get {
-                return ResourceManager.GetString("Window_CustomRunners", resourceCulture);
-            }
-        }
-
-        internal static string CustomRunner_AddedRunners {
-            get {
-                return ResourceManager.GetString("CustomRunner_AddedRunners", resourceCulture);
-            }
-        }
-
-        internal static string CustomRunner_Name {
-            get {
-                return ResourceManager.GetString("CustomRunner_Name", resourceCulture);
-            }
-        }
-
-        internal static string CustomRunner_AddFrames {
-            get {
-                return ResourceManager.GetString("CustomRunner_AddFrames", resourceCulture);
-            }
-        }
-
-        internal static string CustomRunner_RemoveFrame {
-            get {
-                return ResourceManager.GetString("CustomRunner_RemoveFrame", resourceCulture);
-            }
-        }
-
-        internal static string CustomRunner_Save {
-            get {
-                return ResourceManager.GetString("CustomRunner_Save", resourceCulture);
-            }
-        }
-
-        internal static string CustomRunner_Delete {
-            get {
-                return ResourceManager.GetString("CustomRunner_Delete", resourceCulture);
-            }
-        }
-
-        internal static string CustomRunner_Requirements {
-            get {
-                return ResourceManager.GetString("CustomRunner_Requirements", resourceCulture);
-            }
-        }
-
-        internal static string CustomRunner_ConfirmOverwrite {
-            get {
-                return ResourceManager.GetString("CustomRunner_ConfirmOverwrite", resourceCulture);
-            }
-        }
-
-        internal static string CustomRunner_ConfirmDelete {
-            get {
-                return ResourceManager.GetString("CustomRunner_ConfirmDelete", resourceCulture);
-            }
-        }
-
-        internal static string CustomRunner_RequirementsLabel {
-            get {
-                return ResourceManager.GetString("CustomRunner_RequirementsLabel", resourceCulture);
-            }
-        }
-
-        internal static string CustomRunner_FramesLabel {
-            get {
-                return ResourceManager.GetString("CustomRunner_FramesLabel", resourceCulture);
-            }
-        }
-
-        internal static string CustomRunner_Preview {
-            get {
-                return ResourceManager.GetString("CustomRunner_Preview", resourceCulture);
-            }
-        }
-
-        internal static string CustomRunner_PreviewSpeed {
-            get {
-                return ResourceManager.GetString("CustomRunner_PreviewSpeed", resourceCulture);
             }
         }
 

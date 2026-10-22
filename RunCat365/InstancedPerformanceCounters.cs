@@ -18,7 +18,7 @@ namespace RunCat365
 {
     internal abstract class InstancedPerformanceCounters
     {
-        private readonly Dictionary<string, PerformanceCounter> countersByInstance = [];
+        private readonly Dictionary<string, PerformanceCounter> countersByInstance = new();
 
         protected abstract string CategoryName { get; }
         protected abstract string CounterName { get; }

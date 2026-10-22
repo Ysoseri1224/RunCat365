@@ -14,6 +14,7 @@
 
 using RunCat365.Properties;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace RunCat365
 {
@@ -21,26 +22,14 @@ namespace RunCat365
     {
         private readonly CustomToolStripMenuItem systemInfoMenu = new();
         private readonly NotifyIcon notifyIcon = new();
-        private readonly List<Icon> icons = [];
-        private readonly Lock iconLock = new();
+        private readonly List<Icon> icons = new();
+        private readonly object iconLock = new();
         private int current = 0;
-        private EndlessGameForm? endlessGameForm;
-        private CustomRunnerForm? customRunnerForm;
-        private List<Bitmap>? customRunnerSourceFrames;
 
         internal ContextMenuManager(
-            Func<Runner> getRunner,
-            Action<Runner> setRunner,
-            CustomRunnerRepository customRunnerRepository,
-            Func<string?> getCustomRunnerName,
-            Action<string> applyCustomRunner,
-            Action<string> onCustomRunnerDeleted,
             Func<Theme> getSystemTheme,
             Func<Theme> getManualTheme,
             Action<Theme> setManualTheme,
-            Func<SpeedSource> getSpeedSource,
-            Action<SpeedSource> setSpeedSource,
-            Func<SpeedSource, bool> isSpeedSourceAvailable,
             Func<FPSMaxLimit> getFPSMaxLimit,
             Action<FPSMaxLimit> setFPSMaxLimit,
             Func<TemperatureUnit> getTemperatureUnit,
@@ -54,31 +43,6 @@ namespace RunCat365
             systemInfoMenu.Text = "-\n-\n-\n-\n-";
             systemInfoMenu.Enabled = false;
 
-            var runnersMenu = new CustomToolStripMenuItem(Strings.Menu_Runner);
-            runnersMenu.SetupSubMenusFromEnum<Runner>(
-                r => r.GetLocalizedString(),
-                (parent, sender, e) =>
-                {
-                    HandleMenuItemSelection<Runner>(
-                        parent,
-                        sender,
-                        (string? s, out Runner r) => Enum.TryParse(s, out r),
-                        r => setRunner(r)
-                    );
-                    SetIcons(getSystemTheme(), getManualTheme(), getRunner());
-                },
-                r => getCustomRunnerName() is null && getRunner() == r,
-                r => GetRunnerThumbnailBitmap(getSystemTheme(), r)
-            );
-            runnersMenu.DropDownOpening += (sender, e) => RefreshCustomRunnerMenu(
-                runnersMenu,
-                customRunnerRepository,
-                ResolveTheme(getSystemTheme(), getManualTheme()),
-                getRunner,
-                getCustomRunnerName,
-                applyCustomRunner
-            );
-
             var themeMenu = new CustomToolStripMenuItem(Strings.Menu_Theme);
             themeMenu.SetupSubMenusFromEnum<Theme>(
                 t => t.GetLocalizedString(),
@@ -90,27 +54,10 @@ namespace RunCat365
                         (string? s, out Theme t) => Enum.TryParse(s, out t),
                         t => setManualTheme(t)
                     );
-                    SetIcons(getSystemTheme(), getManualTheme(), getRunner());
+                    SetIcons(getSystemTheme(), getManualTheme(), Runner.Cat);
                 },
                 t => getManualTheme() == t,
                 _ => null
-            );
-
-            var speedSourceMenu = new CustomToolStripMenuItem(Strings.Menu_SpeedSource);
-            speedSourceMenu.SetupSubMenusFromEnum<SpeedSource>(
-                s => s.GetLocalizedString(),
-                (parent, sender, e) =>
-                {
-                    HandleMenuItemSelection<SpeedSource>(
-                        parent,
-                        sender,
-                        (string? s, out SpeedSource ss) => Enum.TryParse(s, out ss),
-                        s => setSpeedSource(s)
-                    );
-                },
-                s => getSpeedSource() == s,
-                _ => null,
-                isSpeedSourceAvailable
             );
 
             var fpsMaxLimitMenu = new CustomToolStripMenuItem(Strings.Menu_FPSMaxLimit);
@@ -152,21 +99,13 @@ namespace RunCat365
             launchAtStartupMenu.Click += (sender, e) => HandleStartupMenuClick(sender, toggleLaunchAtStartup);
 
             var settingsMenu = new CustomToolStripMenuItem(Strings.Menu_Settings);
-            settingsMenu.DropDownItems.AddRange(
+            settingsMenu.DropDownItems.AddRange(new ToolStripItem[]
+            {
                 themeMenu,
-                speedSourceMenu,
                 fpsMaxLimitMenu,
                 temperatureUnitMenu,
                 launchAtStartupMenu
-            );
-
-            var customRunnersMenu = new CustomToolStripMenuItem(Strings.Menu_CustomRunners);
-            customRunnersMenu.Click += (sender, e) => ShowOrActivateCustomRunnerWindow(
-                customRunnerRepository, onCustomRunnerDeleted
-            );
-
-            var endlessGameMenu = new CustomToolStripMenuItem(Strings.Menu_EndlessGame);
-            endlessGameMenu.Click += (sender, e) => ShowOrActivateGameWindow(getSystemTheme);
+            });
 
             var appVersionMenu = new CustomToolStripMenuItem(
                 $"{Application.ProductName} v{Application.ProductVersion}"
@@ -179,33 +118,48 @@ namespace RunCat365
             projectPageMenu.Click += (sender, e) => openProjectPage();
 
             var informationMenu = new CustomToolStripMenuItem(Strings.Menu_Information);
-            informationMenu.DropDownItems.AddRange(
+            informationMenu.DropDownItems.AddRange(new ToolStripItem[]
+            {
                 appVersionMenu,
                 projectPageMenu
-            );
+            });
 
             var exitMenu = new CustomToolStripMenuItem(Strings.Menu_Exit);
             exitMenu.Click += (sender, e) => onExit();
 
             var contextMenuStrip = new ContextMenuStrip(new Container());
-            contextMenuStrip.Items.AddRange(
+            contextMenuStrip.Items.AddRange(new ToolStripItem[]
+            {
                 systemInfoMenu,
-                new ToolStripSeparator(),
-                runnersMenu,
-                customRunnersMenu,
                 new ToolStripSeparator(),
                 settingsMenu,
                 informationMenu,
-                endlessGameMenu,
                 new ToolStripSeparator(),
                 exitMenu
-            );
+            });
             contextMenuStrip.Renderer = new ContextMenuRenderer();
 
-            SetIcons(getSystemTheme(), getManualTheme(), getRunner());
+            SetIcons(getSystemTheme(), getManualTheme(), Runner.Cat);
 
+            notifyIcon.DoubleClick += (_, _) => OpenTaskManager();
             notifyIcon.Visible = true;
             notifyIcon.ContextMenuStrip = contextMenuStrip;
+        }
+
+        internal static void OpenTaskManager()
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "Taskmgr.exe"),
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception exception) when (exception is Win32Exception or InvalidOperationException)
+            {
+                MessageBox.Show(exception.Message, Strings.Message_Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private static void HandleMenuItemSelection<T>(
@@ -236,78 +190,8 @@ namespace RunCat365
             }
         }
 
-        private static Bitmap? GetRunnerThumbnailBitmap(Theme systemTheme, Runner runner)
-        {
-            var color = systemTheme.GetContrastColor();
-            var iconName = $"{runner.GetString()}_0".ToLower();
-            var obj = Resources.ResourceManager.GetObject(iconName);
-            if (obj is not Bitmap bitmap) return null;
-            return systemTheme == Theme.Light ? bitmap : bitmap.Recolor(color);
-        }
-
-        private static void RefreshCustomRunnerMenu(
-            CustomToolStripMenuItem runnersMenu,
-            CustomRunnerRepository customRunnerRepository,
-            Theme theme,
-            Func<Runner> getRunner,
-            Func<string?> getCustomRunnerName,
-            Action<string> applyCustomRunner
-        )
-        {
-            foreach (ToolStripItem item in runnersMenu.DropDownItems)
-            {
-                if (item is ToolStripMenuItem menuItem && item.Tag is Runner runner)
-                {
-                    menuItem.Checked = getCustomRunnerName() is null && getRunner() == runner;
-                }
-            }
-
-            var customItems = runnersMenu.DropDownItems
-                .Cast<ToolStripItem>()
-                .Where(item => item.Tag is CustomRunnerMenuTag)
-                .ToList();
-            foreach (var item in customItems)
-            {
-                runnersMenu.DropDownItems.Remove(item);
-                if (item is ToolStripMenuItem menuItem)
-                {
-                    menuItem.Image?.Dispose();
-                }
-                item.Dispose();
-            }
-
-            var profiles = customRunnerRepository.GetAll().OrderBy(p => p.Name).ToList();
-            if (profiles.Count == 0) return;
-
-            runnersMenu.DropDownItems.Add(new ToolStripSeparator { Tag = new CustomRunnerMenuTag("") });
-            foreach (var profile in profiles)
-            {
-                var name = profile.Name;
-                var item = new CustomToolStripMenuItem(name)
-                {
-                    Tag = new CustomRunnerMenuTag(name),
-                    Checked = string.Equals(getCustomRunnerName(), name, StringComparison.OrdinalIgnoreCase),
-                    Image = CreateCustomRunnerThumbnail(customRunnerRepository, name, theme)
-                };
-                item.Click += (sender, e) => applyCustomRunner(name);
-                runnersMenu.DropDownItems.Add(item);
-            }
-        }
-
-        private static Bitmap? CreateCustomRunnerThumbnail(CustomRunnerRepository repository, string name, Theme theme)
-        {
-            var firstFrame = repository.LoadFirstFrame(name);
-            if (firstFrame is null) return null;
-            if (theme == Theme.Light) return firstFrame;
-            using (firstFrame)
-            {
-                return firstFrame.Recolor(theme.GetContrastColor());
-            }
-        }
-
         internal void SetIcons(Theme systemTheme, Theme manualTheme, Runner runner)
         {
-            ClearCustomRunnerSourceFrames();
 
             var runnerName = runner.GetString();
             var rm = Resources.ResourceManager;
@@ -323,21 +207,6 @@ namespace RunCat365
             }
             ReplaceIconList(bitmaps, ResolveTheme(systemTheme, manualTheme));
         }
-
-        internal void SetCustomIcons(List<Bitmap> frames, Theme systemTheme, Theme manualTheme)
-        {
-            ClearCustomRunnerSourceFrames();
-            customRunnerSourceFrames = frames.Select(f => new Bitmap(f)).ToList();
-            ReplaceIconList(customRunnerSourceFrames, ResolveTheme(systemTheme, manualTheme));
-        }
-
-        internal void RecolorActiveCustomIcons(Theme systemTheme, Theme manualTheme)
-        {
-            if (customRunnerSourceFrames is null) return;
-            ReplaceIconList(customRunnerSourceFrames, ResolveTheme(systemTheme, manualTheme));
-        }
-
-        internal bool HasActiveCustomIcons => customRunnerSourceFrames is not null;
 
         private void ReplaceIconList(IList<Bitmap> frames, Theme theme)
         {
@@ -373,16 +242,9 @@ namespace RunCat365
             foreach (var icon in oldIcons) icon.Dispose();
         }
 
-        private void ClearCustomRunnerSourceFrames()
-        {
-            if (customRunnerSourceFrames is null) return;
-            foreach (var bitmap in customRunnerSourceFrames) bitmap.Dispose();
-            customRunnerSourceFrames = null;
-        }
-
         private static Theme ResolveTheme(Theme systemTheme, Theme manualTheme)
         {
-            return manualTheme == Theme.System ? systemTheme : manualTheme;
+            return manualTheme;
         }
 
         private static void HandleStartupMenuClick(object? sender, Func<bool, bool> toggleLaunchAtStartup)
@@ -401,43 +263,6 @@ namespace RunCat365
                 MessageBox.Show(ex.Message, Strings.Message_Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-        }
-
-        private void ShowOrActivateGameWindow(Func<Theme> getSystemTheme)
-        {
-            if (endlessGameForm is null)
-            {
-                endlessGameForm = new EndlessGameForm(getSystemTheme());
-                endlessGameForm.FormClosed += (sender, e) =>
-                {
-                    endlessGameForm = null;
-                };
-                endlessGameForm.Show();
-            }
-            else
-            {
-                endlessGameForm.Activate();
-            }
-        }
-
-        private void ShowOrActivateCustomRunnerWindow(
-            CustomRunnerRepository repository,
-            Action<string> onCustomRunnerDeleted
-        )
-        {
-            if (customRunnerForm is null)
-            {
-                customRunnerForm = new CustomRunnerForm(repository, onCustomRunnerDeleted);
-                customRunnerForm.FormClosed += (sender, e) =>
-                {
-                    customRunnerForm = null;
-                };
-                customRunnerForm.Show();
-            }
-            else
-            {
-                customRunnerForm.Activate();
-            }
         }
 
         internal void ShowBalloonTip(BalloonTipType balloonTipType)
@@ -464,7 +289,7 @@ namespace RunCat365
 
         internal void SetNotifyIconText(string text)
         {
-            notifyIcon.Text = text;
+            notifyIcon.Text = text.Length <= 127 ? text : text[..127];
         }
 
         internal void HideNotifyIcon()
@@ -488,21 +313,16 @@ namespace RunCat365
                     icons.Clear();
                 }
 
-                ClearCustomRunnerSourceFrames();
-
                 if (notifyIcon is not null)
                 {
                     notifyIcon.ContextMenuStrip?.Dispose();
                     notifyIcon.Dispose();
                 }
 
-                endlessGameForm?.Dispose();
-                customRunnerForm?.Dispose();
             }
         }
 
         private delegate bool CustomTryParseDelegate<T>(string? value, out T result);
 
-        private sealed record CustomRunnerMenuTag(string Name);
     }
 }

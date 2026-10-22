@@ -1,4 +1,4 @@
-﻿// Copyright 2025 Takuto Nakamura
+// Copyright 2025 Takuto Nakamura
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ namespace RunCat365
     {
         internal static string ToByteFormatted(this long bytes)
         {
-            string[] units = ["B", "KB", "MB", "GB", "TB"];
+            string[] units = { "B", "KB", "MB", "GB", "TB" };
             int i = 0;
             double doubleBytes = bytes;
             while (1024 <= doubleBytes && i < units.Length - 1)

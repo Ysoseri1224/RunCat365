@@ -1,4 +1,4 @@
-﻿// Copyright 2025 Takuto Nakamura
+// Copyright 2025 Takuto Nakamura
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -128,7 +128,7 @@ namespace RunCat365
     internal class CPURepository
     {
         private readonly CPUPerformanceCounters? counters;
-        private readonly List<CPUInfo> cpuInfoList = [];
+        private readonly List<CPUInfo> cpuInfoList = new();
         private const int CPU_INFO_LIST_LIMIT_SIZE = 5;
 
         internal bool IsAvailable => counters is not null;

@@ -1,4 +1,4 @@
-﻿// Copyright 2025 Takuto Nakamura
+// Copyright 2025 Takuto Nakamura
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ namespace RunCat365
         private const int REFRESH_INTERVAL_TICKS = 30;
 
         private readonly GPUPerformanceCounters? counters;
-        private readonly List<GPUInfo> gpuInfoList = [];
+        private readonly List<GPUInfo> gpuInfoList = new();
         private int ticksSinceLastRefresh;
 
         internal bool IsAvailable => counters is not null;

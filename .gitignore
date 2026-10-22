@@ -5,6 +5,7 @@ obj/
 [Ll]og/
 [Ll]ogs/
 .DS_Store
+/artifacts/
 TestResults
 
 /WapForStore/AppPackages/**

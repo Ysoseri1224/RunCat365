@@ -1,4 +1,4 @@
-﻿// Copyright 2025 Takuto Nakamura
+// Copyright 2025 Takuto Nakamura
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -13,125 +13,38 @@
 //    limitations under the License.
 
 using Microsoft.Win32;
-using Windows.ApplicationModel;
 
 namespace RunCat365
 {
-    internal interface ILaunchAtStartupManager
+    internal sealed class LaunchAtStartupManager
     {
-        bool GetEnabled();
-        bool Toggle(bool currentlyEnabled);
-    }
+        private const string KEY_PATH = @"Software\Microsoft\Windows\CurrentVersion\Run";
+        private const string VALUE_NAME = "RunCat Local";
 
-    internal sealed class PackagedLaunchAtStartupManager : ILaunchAtStartupManager
-    {
-        private static StartupTask? startupTask;
-
-        public bool GetEnabled()
+        internal bool GetStartup()
         {
-            startupTask ??= Task.Run(async () => await StartupTask.GetAsync("RunCatStartup")).Result;
-            if (startupTask is null) return false;
-            if (startupTask.State == StartupTaskState.Enabled) return true;
-            return false;
+            using var key = Registry.CurrentUser.OpenSubKey(KEY_PATH);
+            return string.Equals(key?.GetValue(VALUE_NAME) as string, GetCommand(), StringComparison.OrdinalIgnoreCase);
         }
 
-        public bool Toggle(bool currentlyEnabled)
+        internal bool ToggleStartup(bool currentlyEnabled)
         {
-            startupTask ??= Task.Run(async () => await StartupTask.GetAsync("RunCatStartup")).Result;
+            using var key = Registry.CurrentUser.CreateSubKey(KEY_PATH, true);
             if (currentlyEnabled)
             {
-                if (startupTask.State == StartupTaskState.Enabled) startupTask.Disable();
-                return true;
+                key.DeleteValue(VALUE_NAME, false);
             }
             else
             {
-                switch (startupTask.State)
-                {
-                    case StartupTaskState.Enabled:
-                        return true;
-                    case StartupTaskState.Disabled:
-                        var newStartupState = Task.Run(async () => await startupTask.RequestEnableAsync()).Result;
-                        if (newStartupState == StartupTaskState.Enabled)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException("Launch at Startup could not be activated.");
-                        }
-                    case StartupTaskState.DisabledByUser:
-                        throw new InvalidOperationException("Launch at startup was disabled by the user, enable it in Task Manager > Startup, search RunCat 365 and enable it.");
-                    case StartupTaskState.DisabledByPolicy:
-                        throw new InvalidOperationException("Launch at startup was disabled by policy.");
-                    default:
-                        return false;
-                }
+                key.SetValue(VALUE_NAME, GetCommand());
             }
-        }
-    }
-
-    internal sealed class UnpackagedLaunchAtStartupManager : ILaunchAtStartupManager
-    {
-        public bool GetEnabled()
-        {
-            var keyName = @"Software\Microsoft\Windows\CurrentVersion\Run";
-            using var rKey = Registry.CurrentUser.OpenSubKey(keyName);
-            if (rKey is null) return false;
-            var value = (rKey.GetValue(Application.ProductName) is not null);
-            rKey.Close();
-            return value;
-        }
-
-        public bool Toggle(bool currentlyEnabled)
-        {
-            var productName = Application.ProductName;
-            if (productName is null) return false;
-            var keyName = @"Software\Microsoft\Windows\CurrentVersion\Run";
-            using var rKey = Registry.CurrentUser.OpenSubKey(keyName, true);
-            if (rKey is null) return false;
-            if (currentlyEnabled)
-            {
-                rKey.DeleteValue(productName, false);
-            }
-            else
-            {
-                var fileName = Environment.ProcessPath;
-                if (fileName is not null)
-                {
-                    rKey.SetValue(productName, fileName);
-                }
-            }
-            rKey.Close();
             return true;
         }
-    }
 
-    internal class LaunchAtStartupManager
-    {
-        private readonly ILaunchAtStartupManager launchAtStartupManager;
-
-        public LaunchAtStartupManager()
+        private static string GetCommand()
         {
-            launchAtStartupManager = IsRunningAsPackaged()
-                ? new PackagedLaunchAtStartupManager()
-                : new UnpackagedLaunchAtStartupManager();
-        }
-
-        public bool GetStartup() => launchAtStartupManager.GetEnabled();
-
-        public bool ToggleStartup(bool currentlyEnabled) => launchAtStartupManager.Toggle(currentlyEnabled);
-
-        private static bool IsRunningAsPackaged()
-        {
-            try
-            {
-                _ = Package.Current;
-                return true;
-            }
-            catch (InvalidOperationException)
-            {
-                return false;
-            }
+            var path = Environment.ProcessPath ?? throw new InvalidOperationException("Executable path is unavailable.");
+            return "\"" + path + "\"";
         }
     }
 }

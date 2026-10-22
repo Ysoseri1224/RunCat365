@@ -1,4 +1,4 @@
-﻿// Copyright 2025 Takuto Nakamura
+// Copyright 2025 Takuto Nakamura
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ namespace RunCat365
     enum Runner
     {
         Cat,
-        Parrot,
-        Horse,
     }
 
     internal static class RunnerExtension
@@ -30,8 +28,6 @@ namespace RunCat365
             return runner switch
             {
                 Runner.Cat => "Cat",
-                Runner.Parrot => "Parrot",
-                Runner.Horse => "Horse",
                 _ => "",
             };
         }
@@ -41,8 +37,6 @@ namespace RunCat365
             return runner switch
             {
                 Runner.Cat => Strings.Runner_Cat,
-                Runner.Parrot => Strings.Runner_Parrot,
-                Runner.Horse => Strings.Runner_Horse,
                 _ => "",
             };
         }
@@ -52,8 +46,6 @@ namespace RunCat365
             return runner switch
             {
                 Runner.Cat => 5,
-                Runner.Parrot => 10,
-                Runner.Horse => 14,
                 _ => 0,
             };
         }

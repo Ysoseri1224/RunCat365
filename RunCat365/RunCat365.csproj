@@ -1,20 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <ImplicitUsings>enable</ImplicitUsings>
-    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
-    <AssemblyName>RunCat 365</AssemblyName>
+    <AssemblyName>RunCat Local</AssemblyName>
+    <RuntimeFrameworkVersion>6.0.36</RuntimeFrameworkVersion>
+    <RollForward>LatestPatch</RollForward>
+    <LangVersion>10.0</LangVersion>
     <ApplicationIcon>resources\app_icon.ico</ApplicationIcon>
     <Authors>Takuto Nakamura</Authors>
     <Company>Studio Kyome</Company>
     <Description>A cute running cat animation on your taskbar.</Description>
     <Copyright>© 2022 Takuto Nakamura</Copyright>
     <PackageProjectUrl>https://runcat-dev.github.io/RunCat365/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/runcat-dev/RunCat365</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Ysoseri1224/RunCat365</RepositoryUrl>
     <PackageTags>cpu;cat;taskbar</PackageTags>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageIcon>app_icon.png</PackageIcon>

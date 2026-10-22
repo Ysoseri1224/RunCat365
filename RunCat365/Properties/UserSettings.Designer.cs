@@ -9,8 +9,7 @@
 //------------------------------------------------------------------------------
 
 namespace RunCat365.Properties {
-    
-    
+
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.14.0.0")]
     internal sealed partial class UserSettings : global::System.Configuration.ApplicationSettingsBase {
@@ -22,19 +21,7 @@ namespace RunCat365.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Cat")]
-        public string Runner {
-            get {
-                return ((string)(this["Runner"]));
-            }
-            set {
-                this["Runner"] = value;
-            }
-        }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
@@ -82,41 +69,6 @@ namespace RunCat365.Properties {
                 this["FirstLaunch"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int HighScore {
-            get {
-                return ((int)(this["HighScore"]));
-            }
-            set {
-                this["HighScore"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("CPU")]
-        public string SpeedSource {
-            get {
-                return ((string)(this["SpeedSource"]));
-            }
-            set {
-                this["SpeedSource"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string CustomRunnerName {
-            get {
-                return ((string)(this["CustomRunnerName"]));
-            }
-            set {
-                this["CustomRunnerName"] = value;
-            }
-        }
+
     }
 }

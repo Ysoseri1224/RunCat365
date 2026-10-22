@@ -1,42 +1,12 @@
-# How to Release a New Version to Microsoft Store
+# Release a local Windows executable
 
-This document is for code owners.
+This fork does not submit packages to the Microsoft Store.
 
-## 1. Update Version Numbers
+1. Update the application version in `RunCat365/RunCat365.csproj` when needed.
+2. Run `dotnet build RunCat365/RunCat365.csproj -c Release` with SDK 6.0.302.
+3. Run `dotnet run --project tests/RunCat.Local.Smoke -c Release` on Windows with Desktop runtime 6.0.36. The optional `-- --task-manager` flag also invokes the tray double-click and opens Task Manager if it is not already running. Automatic cleanup of an elevated Task Manager window may be unavailable.
+4. Run `./publish-local.ps1`.
+5. Verify the contents of `artifacts/RunCat-Local-x64`. Distribute that directory as a ZIP, including the Apache license. The runtime is not bundled.
+6. Quit existing RunCat instances before launching the new EXE. Verify its tray menu and startup behavior from the permanent install location.
 
-Version numbers must be updated in **two** locations:
-
-1. **RunCat365/RunCat365.csproj**
-   - Update `<Version>X.Y.Z</Version>` (3-digit format)
-2. **WapForStore/Package.appxmanifest**
-   - Update `Version="X.Y.Z.0"` in the `<Identity>` element (4-digit format)
-
-## 2. Build the App
-
-1. Open the solution in Visual Studio
-2. Verify the build succeeds in Release configuration
-
-## 3. Create the Package
-
-1. In Visual Studio, right-click on the **WapForStore** project
-2. Select **Publish** > **Create App Packages**
-3. Choose **Microsoft Store as MSIX package** and sign in with your Microsoft account
-4. Select the existing app "RunCat 365"
-5. Configure package settings (x86, x64, arm64)
-6. Generate the `.msixupload` file
-
-## 4. Submit to Partner Center
-
-1. Sign in to [Partner Center](https://partner.microsoft.com/dashboard)
-2. Navigate to **Apps and games** > **RunCat 365**
-3. Click **Start a new submission**
-4. Update the following sections:
-   - **Packages**: Upload the generated `.msixupload` file
-   - **Store listings**: Update description/screenshots if needed
-   - **Release notes**: Describe changes in this version
-5. Click **Submit to the Store**
-
-## 5. Wait for Certification
-
-- Certification typically takes 1-3 business days
-- If issues are found, fix them and resubmit
+GitHub releases are optional; publication to a local directory does not create an online release. The `WapForStore` files are retained upstream history and are not used by this process.

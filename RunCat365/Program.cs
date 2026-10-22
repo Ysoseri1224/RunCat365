@@ -39,8 +39,8 @@ namespace RunCat365
             try
             {
                 ApplicationConfiguration.Initialize();
-                Application.SetColorMode(SystemColorMode.System);
-                Application.Run(new RunCat365ApplicationContext());
+                using var context = new RunCat365ApplicationContext();
+                Application.Run(context);
             }
             finally
             {
@@ -60,31 +60,26 @@ namespace RunCat365
         private readonly TemperatureRepository temperatureRepository;
         private readonly StorageRepository storageRepository;
         private readonly NetworkRepository networkRepository;
-        private readonly CustomRunnerRepository customRunnerRepository;
         private readonly LaunchAtStartupManager launchAtStartupManager;
         private readonly ContextMenuManager contextMenuManager;
         private readonly FormsTimer fetchTimer;
         private readonly FormsTimer animateTimer;
         private Runner runner = Runner.Cat;
-        private Theme manualTheme = Theme.System;
+        private Theme manualTheme = Theme.Light;
         private TemperatureUnit temperatureUnit = TemperatureUnit.System;
         private FPSMaxLimit fpsMaxLimit = FPSMaxLimit.FPS40;
-        private SpeedSource speedSource = SpeedSource.CPU;
-        private string? customRunnerName;
         private int fetchCounter = 5;
         private bool isFetching;
+        private bool isDisposed;
+        private Task<bool>? fetchTask;
 
         public RunCat365ApplicationContext()
         {
             UserSettings.Default.Reload();
-            _ = Enum.TryParse(UserSettings.Default.Runner, out runner);
-            _ = Enum.TryParse(UserSettings.Default.Theme, out manualTheme);
+            manualTheme = Enum.TryParse<Theme>(UserSettings.Default.Theme, out var savedTheme) && Enum.IsDefined(typeof(Theme), savedTheme)
+                ? savedTheme : GetSystemTheme();
             _ = Enum.TryParse(UserSettings.Default.TemperatureUnit, out temperatureUnit);
             _ = Enum.TryParse(UserSettings.Default.FPSMaxLimit, out fpsMaxLimit);
-            _ = Enum.TryParse(UserSettings.Default.SpeedSource, out speedSource);
-            customRunnerName = string.IsNullOrEmpty(UserSettings.Default.CustomRunnerName)
-                ? null
-                : UserSettings.Default.CustomRunnerName;
 
             SystemEvents.UserPreferenceChanged += new UserPreferenceChangedEventHandler(UserPreferenceChanged);
 
@@ -94,24 +89,12 @@ namespace RunCat365
             temperatureRepository = new TemperatureRepository();
             storageRepository = new StorageRepository();
             networkRepository = new NetworkRepository();
-            customRunnerRepository = new CustomRunnerRepository();
             launchAtStartupManager = new LaunchAtStartupManager();
 
-            ResolveSpeedSource();
-
             contextMenuManager = new ContextMenuManager(
-                () => runner,
-                r => ChangeRunner(r),
-                customRunnerRepository,
-                () => customRunnerName,
-                name => ApplyCustomRunner(name),
-                deletedName => HandleCustomRunnerDeleted(deletedName),
                 () => GetSystemTheme(),
                 () => manualTheme,
                 t => ChangeManualTheme(t),
-                () => speedSource,
-                s => ChangeSpeedSource(s),
-                s => IsSpeedSourceAvailable(s),
                 () => fpsMaxLimit,
                 f => ChangeFPSMaxLimit(f),
                 () => temperatureUnit,
@@ -121,11 +104,6 @@ namespace RunCat365
                 () => OpenProjectPage(),
                 () => Application.Exit()
             );
-
-            if (customRunnerName is not null)
-            {
-                ApplyCustomRunner(customRunnerName);
-            }
 
             animateTimer = new FormsTimer
             {
@@ -154,25 +132,6 @@ namespace RunCat365
             return (int)value == 0 ? Theme.Dark : Theme.Light;
         }
 
-        private bool IsSpeedSourceAvailable(SpeedSource speedSource)
-        {
-            return speedSource switch
-            {
-                SpeedSource.CPU => true,
-                SpeedSource.GPU => gpuRepository.IsAvailable,
-                SpeedSource.Memory => true,
-                _ => false,
-            };
-        }
-
-        private void ResolveSpeedSource()
-        {
-            if (!IsSpeedSourceAvailable(speedSource))
-            {
-                ChangeSpeedSource(SpeedSource.CPU);
-            }
-        }
-
         private void ShowBalloonTipIfNeeded()
         {
             if (!cpuRepository.IsAvailable)
@@ -191,14 +150,7 @@ namespace RunCat365
         {
             if (e.Category != UserPreferenceCategory.General) return;
             var systemTheme = GetSystemTheme();
-            if (contextMenuManager.HasActiveCustomIcons)
-            {
-                contextMenuManager.RecolorActiveCustomIcons(systemTheme, manualTheme);
-            }
-            else
-            {
-                contextMenuManager.SetIcons(systemTheme, manualTheme, runner);
-            }
+            contextMenuManager.SetIcons(systemTheme, manualTheme, runner);
         }
 
         private static void OpenProjectPage()
@@ -207,7 +159,7 @@ namespace RunCat365
             {
                 Process.Start(new ProcessStartInfo()
                 {
-                    FileName = "https://github.com/runcat-dev/RunCat365",
+                    FileName = "https://github.com/Ysoseri1224/RunCat365",
                     UseShellExecute = true
                 });
             }
@@ -215,40 +167,6 @@ namespace RunCat365
             {
                 Console.WriteLine($"Error: {e.Message}");
             }
-        }
-
-        private void ChangeRunner(Runner r)
-        {
-            runner = r;
-            customRunnerName = null;
-            UserSettings.Default.Runner = runner.ToString();
-            UserSettings.Default.CustomRunnerName = string.Empty;
-            UserSettings.Default.Save();
-        }
-
-        private void ApplyCustomRunner(string name)
-        {
-            var frames = customRunnerRepository.LoadFrames(name);
-            if (frames.Count == 0) return;
-            customRunnerName = name;
-            UserSettings.Default.CustomRunnerName = name;
-            UserSettings.Default.Save();
-            contextMenuManager.SetCustomIcons(frames, GetSystemTheme(), manualTheme);
-            foreach (var frame in frames) frame.Dispose();
-        }
-
-        private void RevertToBuiltInRunner()
-        {
-            customRunnerName = null;
-            UserSettings.Default.CustomRunnerName = string.Empty;
-            UserSettings.Default.Save();
-            contextMenuManager.SetIcons(GetSystemTheme(), manualTheme, runner);
-        }
-
-        private void HandleCustomRunnerDeleted(string deletedName)
-        {
-            if (!string.Equals(customRunnerName, deletedName, StringComparison.OrdinalIgnoreCase)) return;
-            RevertToBuiltInRunner();
         }
 
         private void ChangeManualTheme(Theme t)
@@ -262,13 +180,6 @@ namespace RunCat365
         {
             temperatureUnit = u;
             UserSettings.Default.TemperatureUnit = temperatureUnit.ToString();
-            UserSettings.Default.Save();
-        }
-
-        private void ChangeSpeedSource(SpeedSource s)
-        {
-            speedSource = s;
-            UserSettings.Default.SpeedSource = speedSource.ToString();
             UserSettings.Default.Save();
         }
 
@@ -286,13 +197,7 @@ namespace RunCat365
 
         private string GetInfoDescription(CPUInfo cpuInfo, GPUInfo? gpuInfo, MemoryInfo memoryInfo, TemperatureInfo? temperatureInfo)
         {
-            var baseDescription = speedSource switch
-            {
-                SpeedSource.CPU => cpuInfo.GetDescription(),
-                SpeedSource.GPU => gpuInfo?.GetDescription() ?? "",
-                SpeedSource.Memory => memoryInfo.GetDescription(),
-                _ => "",
-            };
+            var baseDescription = cpuInfo.GetDescription();
 
             var temperatureDescription = temperatureInfo?.GetDescription(temperatureUnit) ?? "";
             return string.IsNullOrEmpty(temperatureDescription) ? baseDescription : $"{baseDescription}\n{temperatureDescription}";
@@ -300,13 +205,7 @@ namespace RunCat365
 
         private int CalculateInterval(CPUInfo cpuInfo, GPUInfo? gpuInfo, MemoryInfo memoryInfo)
         {
-            var load = speedSource switch
-            {
-                SpeedSource.CPU => cpuInfo.Total,
-                SpeedSource.GPU => gpuInfo?.Maximum ?? 0f,
-                SpeedSource.Memory => memoryInfo.MemoryLoad,
-                _ => 0f,
-            };
+            var load = cpuInfo.Total;
             var speed = (float)Math.Max(1.0f, (load / 5.0f) * fpsMaxLimit.GetRate());
             return (int)(500.0f / speed);
         }
@@ -338,18 +237,18 @@ namespace RunCat365
             {
                 systemInfoValues.AddRange(networkInfo.Value.GenerateIndicator());
             }
-            contextMenuManager.SetSystemInfoMenuText(string.Join("\n", [.. systemInfoValues]));
+            contextMenuManager.SetSystemInfoMenuText(string.Join("\n", systemInfoValues));
 
             return CalculateInterval(cpuInfo, gpuInfo, memoryInfo);
         }
 
         private async void FetchTick(object? sender, EventArgs e)
         {
-            if (isFetching) return;
+            if (isFetching || isDisposed) return;
             isFetching = true;
             try
             {
-                var doHeavySlice = await Task.Run(() =>
+                fetchTask = Task.Run(() =>
                 {
                     cpuRepository.Update();
                     gpuRepository.Update();
@@ -363,7 +262,8 @@ namespace RunCat365
                     return true;
                 });
 
-                if (!doHeavySlice) return;
+                var doHeavySlice = await fetchTask;
+                if (isDisposed || !doHeavySlice) return;
 
                 var interval = FetchSystemInfo();
                 animateTimer.Stop();
@@ -382,14 +282,24 @@ namespace RunCat365
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            if (disposing && !isDisposed)
             {
+                isDisposed = true;
                 SystemEvents.UserPreferenceChanged -= UserPreferenceChanged;
 
                 animateTimer?.Stop();
                 animateTimer?.Dispose();
                 fetchTimer?.Stop();
                 fetchTimer?.Dispose();
+
+                try
+                {
+                    fetchTask?.GetAwaiter().GetResult();
+                }
+                catch (Exception exception)
+                {
+                    Debug.WriteLine(exception.Message);
+                }
 
                 cpuRepository?.Close();
                 gpuRepository?.Close();

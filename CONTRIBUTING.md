@@ -81,7 +81,7 @@ To suggest a new feature:
 
 ### Before Opening a Pull Request
 
-- **.NET 9.0** is required.
+- **.NET SDK 6.0.302** and Windows Desktop runtime **6.0.36** are used by this local fork. See `README.md` for build and test commands.
 - All code must be written in **English**.  
   Use the localization system for user-facing text in other languages.
   If you use Claude Code, the `.claude/skills/add-locale` skill walks through every file that needs updating when introducing a new locale.

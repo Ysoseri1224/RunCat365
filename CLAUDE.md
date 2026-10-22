@@ -11,28 +11,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Windows Forms application (.NET 9.0 / C#) distributed via the Microsoft Store. Runs as a system tray icon whose animation reflects system load.
+Windows Forms application (.NET 6 / C# 10) distributed as a local executable. Runs as a cat-only tray icon whose animation reflects CPU load.
 
 **Top-level layout:**
 
 - `RunCat365.sln` — Main solution
 - `RunCat365/` — Main application project
-- `WapForStore/` — Windows Application Packaging project for the Microsoft Store
+- `WapForStore/` — Legacy upstream packaging files, excluded from the local solution
 
-**Build:** Open `RunCat365.sln` in Visual Studio. Supported platforms: x64, x86, ARM64. Target framework: .NET 9.0 (Windows 10.0.26100.0).
+**Build:** `dotnet build RunCat365/RunCat365.csproj -c Release`. Target: `net6.0-windows`, runtime 6.0.36. Local x64 publication: `./publish-local.ps1`. Windows smoke checks: `dotnet run --project tests/RunCat.Local.Smoke -c Release`.
 
-**Releasing — version numbers must be updated in two places:**
+**Releasing:** Follow `.github/how_to_release.md` for the local executable workflow. Update only the application version for this fork; the legacy Store manifest is not used.
 
-1. `RunCat365/RunCat365.csproj` — `<Version>X.Y.Z</Version>` (3-digit)
-2. `WapForStore/Package.appxmanifest` — `Version="X.Y.Z.0"` in `<Identity>` (4-digit)
 
 ## Architecture (patterns, not file lists)
 
 - **Entry point:** `Program.cs` hosts the tray application context that owns the timers, the tray icon, and the context menu.
 - **Repository pattern for system metrics:** Each metric has a `*Repository` class that produces a matching `*Info` struct (CPU / GPU / memory / storage / network / temperature). Add a new metric by adding a paired repository and info struct.
-- **Animation loop:** A 1-second fetch timer refreshes the `*Info` structs; a separate animate timer advances frames at a rate derived from the `SpeedSource` setting. Theme-aware icon recoloring lives in `BitmapExtension`.
-- **Custom runners:** User-defined animations are loaded from `profiles.json` and managed by the `CustomRunner*` classes; the active profile is stored in the `CustomRunnerName` setting.
-- **EndlessGame:** Mini-game living in `EndlessGameForm` and its collaborator classes.
+- **Animation loop:** A 1-second fetch timer samples CPU/GPU; other metrics and the animation interval refresh every five samples. CPU is the only animation speed source. Theme-aware cat recoloring lives in `BitmapExtension`.
+- **Scope:** Only light/dark cats; no custom runners, other animals or game. Double-click opens Task Manager. Startup uses a quoted current-user Run entry.
 - **Settings & resources:** Persisted user preferences in `Properties/UserSettings.settings`; embedded images/icons in `Properties/Resources.resx`.
 
 ## Localization

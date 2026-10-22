@@ -1,4 +1,4 @@
-﻿// Copyright 2025 Takuto Nakamura
+// Copyright 2025 Takuto Nakamura
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ namespace RunCat365
         }
     }
 
-    internal partial class MemoryRepository
+    internal class MemoryRepository
     {
         private MemoryInfo memoryInfo;
 
@@ -87,8 +87,8 @@ namespace RunCat365
             public ulong ullAvailExtendedVirtual;
         }
 
-        [LibraryImport("kernel32.dll", SetLastError = true)]
+        [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static partial bool GlobalMemoryStatusEx(ref MemoryStatusEx lpBuffer);
+        internal static extern bool GlobalMemoryStatusEx(ref MemoryStatusEx lpBuffer);
     }
 }

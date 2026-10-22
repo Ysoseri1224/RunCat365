@@ -1,4 +1,4 @@
-﻿// Copyright 2025 Takuto Nakamura
+// Copyright 2025 Takuto Nakamura
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ namespace RunCat365
 {
     enum Theme
     {
-        System,
         Light,
         Dark,
     }
@@ -29,7 +28,6 @@ namespace RunCat365
         {
             return theme switch
             {
-                Theme.System => Strings.Theme_System,
                 Theme.Light => Strings.Theme_Light,
                 Theme.Dark => Strings.Theme_Dark,
                 _ => "",

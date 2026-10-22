@@ -16,11 +16,18 @@ using RunCat365.Properties;
 
 namespace RunCat365
 {
-    internal readonly struct BalloonTipInfo(string title, string text, ToolTipIcon icon)
+    internal readonly struct BalloonTipInfo
     {
-        internal string Title { get; } = title;
-        internal string Text { get; } = text;
-        internal ToolTipIcon Icon { get; } = icon;
+        internal string Title { get; }
+        internal string Text { get; }
+        internal ToolTipIcon Icon { get; }
+
+        internal BalloonTipInfo(string title, string text, ToolTipIcon icon)
+        {
+            Title = title;
+            Text = text;
+            Icon = icon;
+        }
     }
 
     internal enum BalloonTipType
